@@ -11,18 +11,22 @@ processors:
 
 exporters:
   debug:
+  otlp:
+    endpoint: "api.eu1.honeycomb.io:443"
+    headers:
+      "x-honeycomb-team": "xxxx"
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [debug]
+      exporters: [debug,otlp]
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters: [debug]
+      exporters: [debug,otlp]
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [debug]
+      exporters: [debug,otlp]
