@@ -1,0 +1,100 @@
+name: quotes
+
+services:
+    quotes:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        restart: unless-stopped
+        volumes:
+            - ./:/app
+        environment:
+            - XDEBUG_CONFIG=client_host=host.docker.internal
+            - PHP_IDE_CONFIG=serverName=quotes
+            - XDEBUG_MODE=debug
+            - XDEBUG_SESSION=start
+            - CADDY_SERVER_FRANKENPHP_OPTIONS=
+            - APP_INDEX_FILE=index.php
+        depends_on:
+            - redis
+            - database
+        networks:
+            - frontend
+            - default
+
+    database:
+        image: mariadb:10.5-focal
+        restart: unless-stopped
+        environment:
+            MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+            MYSQL_DATABASE: "${DB_DATABASE}"
+            MYSQL_USER: "${DB_USERNAME}"
+            MYSQL_PASSWORD: "${DB_PASSWORD}"
+        volumes:
+            - dbdata:/var/lib/mysql
+
+    redis:
+        image: redis:6.2.6
+        restart: unless-stopped
+
+    composer:
+        profiles: [ "composer" ]
+        build:
+            context: .
+            dockerfile: Dockerfile
+        entrypoint: [ "composer" ]
+        command: [ "--version" ]
+        volumes:
+            - ./:/app
+        healthcheck:
+            disable: true
+
+    npm:
+        profiles: [ "npm" ]
+        image: node:23
+        entrypoint: [ "npm" ]
+        command: [ "" ]
+        working_dir: /app
+        volumes:
+            - ./:/app
+
+    artisan:
+        profiles: [ "artisan" ]
+        build:
+            context: .
+            dockerfile: Dockerfile
+        entrypoint: [ "php", "/app/artisan" ]
+        volumes:
+            - ./:/app/
+        depends_on:
+            - redis
+            - database
+        healthcheck:
+            disable: true
+
+    shell:
+        profiles: [ "shell" ]
+        build:
+            context: .
+            dockerfile: Dockerfile
+        entrypoint: [ "/bin/sh" ]
+        volumes:
+            - ./:/app/
+        depends_on:
+            - redis
+            - database
+        healthcheck:
+            disable: true
+
+    collector:
+        image: otel/opentelemetry-collector-contrib
+        volumes:
+            - ./collector.yml:/etc/otelcol-contrib/config.yaml
+
+volumes:
+    dbdata:
+        driver: local
+
+networks:
+    frontend:
+        external: true
