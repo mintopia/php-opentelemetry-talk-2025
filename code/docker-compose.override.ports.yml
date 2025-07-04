@@ -1,0 +1,5 @@
+# Use this override file to expose the application on a network port
+services:
+  quotes:
+    ports:
+      - "80:80"

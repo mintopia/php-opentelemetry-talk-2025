@@ -18,9 +18,6 @@ services:
         depends_on:
             - redis
             - database
-        networks:
-            - frontend
-            - default
 
     database:
         image: mariadb:10.5-focal
@@ -86,15 +83,7 @@ services:
         healthcheck:
             disable: true
 
-    collector:
-        image: otel/opentelemetry-collector-contrib
-        volumes:
-            - ./collector.yml:/etc/otelcol-contrib/config.yaml
 
 volumes:
     dbdata:
         driver: local
-
-networks:
-    frontend:
-        external: true

@@ -2,9 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Quote;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin Quote
+ */
 class QuoteResource extends JsonResource
 {
     /**
@@ -17,8 +21,8 @@ class QuoteResource extends JsonResource
         return [
             'id' => $this->id,
             'text' => $this->text,
-            'createdAt' => $this->created_at->toIso8601String(),
-            'updatedAt' => $this->created_at->toIso8601String(),
+            'createdAt' => $this->created_at?->toIso8601String(),
+            'updatedAt' => $this->created_at?->toIso8601String(),
         ];
     }
 }

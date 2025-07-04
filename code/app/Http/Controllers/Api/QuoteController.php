@@ -21,7 +21,7 @@ class QuoteController extends Controller
 
     public function store(QuoteRequest $request): JsonResource
     {
-        $quote = new Quote;
+        $quote = new Quote();
         $quote->text = $request->input('text');
         $quote->save();
         return new QuoteResource($quote);

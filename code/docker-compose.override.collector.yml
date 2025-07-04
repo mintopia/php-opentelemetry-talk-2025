@@ -1,0 +1,6 @@
+# OpenTelemetry Collector override
+services:
+  collector:
+    image: otel/opentelemetry-collector-contrib
+    volumes:
+      - ./collector.yml:/etc/otelcol-contrib/config.yaml
