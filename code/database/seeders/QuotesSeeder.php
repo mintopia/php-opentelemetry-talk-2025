@@ -19,6 +19,11 @@ class QuotesSeeder extends Seeder
         "So say we all!",
         "The greater good",
         "Reticulating splines",
+        "I would like to have seen Montana.",
+        "You in a maze of twisty little passages, all different.",
+        "Right on Commander.",
+        "Starbuck, what do you hear? Nothing but the rain.",
+        "No silicon heaven? Preposterous! Where would all the calculators go?",
     ];
 
     public function run(): void
